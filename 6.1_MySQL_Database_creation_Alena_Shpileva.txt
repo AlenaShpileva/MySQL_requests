@@ -1,0 +1,42 @@
+﻿-- Задача «Shop»
+-- - Создать базу данных магазина из 2 таблиц - продукты (товары) и категории товаров
+-- - Каждый товар принадлежит некоторой категории
+-- - Вставьте данные в таблицы (3-5 строк)
+-- - Попробовать UPDATE, DELETE:
+-- - Удалить товары с ценой выше 100
+-- - Изменить название и цену некоторому товару
+
+-- DROP DATABASE shop; 
+
+CREATE DATABASE shop;
+
+USE shop;
+
+CREATE TABLE categories
+(
+	id INT AUTO_INCREMENT,
+	name VARCHAR(100) NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE products
+(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(255) NOT NULL,
+	categoryId INT NOT NULL,
+	price DECIMAL(8, 2) NOT NULL,
+	FOREIGN KEY (categoryId) REFERENCES categories(id)
+);
+
+INSERT INTO categories(name)
+VALUES ('Сыры'), ('Колбасы'), ('Консервы рыбные'), ('Консервы мясные');
+
+INSERT INTO products(name, price, categoryId)
+VALUES ('Сыр Российский', 60.00, 1), ('Сыр Гауда', 80.00, 1), ('Сайра в масле', 100.00, 3), ('Говядина тушеная', 110.00, 4);
+
+DELETE FROM products
+WHERE price > 100.00;
+
+UPDATE products
+SET price = price + 10.00, name = 'Сыр Гауда Сливочный'
+WHERE id = 2;

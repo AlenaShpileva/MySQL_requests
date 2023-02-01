@@ -1,0 +1,52 @@
+-- Задача «Join»
+
+-- 1. Попробовать CROSS JOIN между таблицами городов и стран
+
+USE world;
+
+SELECT * FROM city, country;	-- 1 
+
+SELECT * FROM city
+CROSS JOIN country;			-- 2
+
+SELECT * FROM country
+CROSS JOIN city; 				-- 3
+
+SELECT city.name, country.continent
+FROM city, country;				-- 4
+
+-- 2. При помощи INNER JOIN: вывести код страны, название 
+-- страны и название города-столицы
+
+SELECT country.code, country.name, city.name
+FROM country
+INNER JOIN city
+	ON country.capital = city.id;
+
+-- 3. Сделайте запрос, который выводит имя города, его 
+-- численность, а также код и название его страны
+
+SELECT city.name, city.population, country.code, country.name 
+FROM city
+INNER JOIN country
+	ON city.countryCode = country.code;
+
+-- 4. Для каждого континента выведите количество городов из 
+-- этого континента. Учтите, что в Антарктиде городов нет, но 
+-- надо чтобы все равно вывелся 0
+
+SELECT country.continent, COUNT(city.id) AS numberOfCities
+FROM country
+LEFT JOIN city 
+	ON country.code = city.countryCode
+GROUP BY country.continent;
+	
+-- 5. Выведите количество официальных языков для каждой 
+-- страны в порядке убывания количества этих языков
+
+SELECT country.name, COUNT(countrylanguage.countryCode) AS numberOfOfficialLanguages
+FROM country
+LEFT JOIN countrylanguage
+	ON country.code = countrylanguage.countryCode AND countrylanguage.isOfficial = 'T'
+GROUP BY country.name
+ORDER BY numberOfOfficialLanguages DESC;

@@ -1,0 +1,21 @@
+-- Задача «Стандартные функции»
+
+-- По таблице стран:
+-- 1. Выведите страны в порядке убывания длины названия. 
+-- И пусть название страны будет в верхнем регистре, 
+-- а название континента - в нижнем.
+
+USE world;
+
+SELECT UPPER(name) AS name, LOWER(continent) AS continent
+FROM country
+ORDER BY CHAR_LENGTH(name) DESC;
+
+-- 2. Для каждой страны найдите радиус окружности, 
+-- у которой площадь круга такая же, как площадь этой страны. 
+-- Отсортируйте результат по убыванию радиуса.
+
+SELECT name, SQRT(surfaceArea / PI()) AS radius
+FROM country
+ORDER BY radius DESC;
+

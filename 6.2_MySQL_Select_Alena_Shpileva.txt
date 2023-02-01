@@ -1,0 +1,48 @@
+-- Задача «Простые запросы»
+-- БД world, таблица city
+-- 1. Вывести все строки, но только столбцы имя и дистрикт
+
+USE world;
+
+SELECT name, district
+FROM city;
+
+-- 2. Выведите только города из России, отсортируйте по имени
+
+SELECT * FROM city 
+WHERE countryCode = 'RUS'
+ORDER BY name;
+
+-- 3. Выведите города из Испании, Португалии и Греции, 
+-- отсортируйте по имени по убыванию
+
+SELECT * FROM city
+WHERE countryCode IN ('ESP', 'PRT', 'GRC')
+ORDER BY name DESC;
+ 
+-- 4. Вывести города, у которых население лежит в диапазоне от 300000 до 500000
+
+SELECT * FROM city
+WHERE population BETWEEN 300000 AND 500000;
+
+-- 5. Вывести города, начинающиеся с буквы А
+
+SELECT * FROM city
+WHERE name LIKE 'A%';
+
+-- 6. Вывести города, содержащие букву А
+
+SELECT * FROM city
+WHERE name LIKE '%a%';
+
+-- 7. Вывести города из России с населением не менее 1 млн
+
+SELECT * FROM city
+WHERE countryCode = 'Rus' AND population >= 1000000;
+
+-- 8. Вывести города из Испании, начинающиеся с буквы A, 
+-- и города из Греции с численностью до 200000 человек
+
+SELECT * FROM city
+WHERE (countryCode = 'ESP' AND name LIKE 'A%') 
+	OR (countryCode = 'GRC' AND population < 200000);

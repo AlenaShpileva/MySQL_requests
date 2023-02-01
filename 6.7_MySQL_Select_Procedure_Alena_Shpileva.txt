@@ -1,0 +1,67 @@
+-- Задача «Тестовые данные»
+-- Напишите скрипт, который заполнит БД из задачи Shop
+-- категориями и товарами
+-- Пусть создастся 100 категорий и 5000 товаров
+-- Пусть товары привязываются к категориям случайным 
+-- образом. И случайным образом пусть выставляется цена
+-- Используйте функцию RAND
+
+-- DROP DATABASE shop; 
+
+CREATE DATABASE shop;
+
+USE shop;
+
+-- Создание таблицы с категориями с полями: id, имя.
+CREATE TABLE categories
+(
+	id INT AUTO_INCREMENT,
+	name VARCHAR(100) NOT NULL,
+	PRIMARY KEY (id)
+);
+
+-- Создание таблицы с продуктами с полями: id, имя, категория, цена.
+CREATE TABLE products
+(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(255) NOT NULL,
+	categoryId INT NOT NULL,
+	price DECIMAL(8, 2) NOT NULL,
+	FOREIGN KEY (categoryId) REFERENCES categories(id)
+);
+
+-- Создание хранимой процедуры:
+DELIMITER $$ 
+CREATE PROCEDURE insertData() 
+BEGIN 
+	DECLARE i INT DEFAULT 1;  -- Создание переменной для таблицы категорий. 
+	DECLARE j INT DEFAULT 1;  -- Создание переменной для таблицы товаров.	
+	
+	-- Заполнение таблицы категорий данными. 100 категорий.
+	WHILE i <= 100 DO 
+		INSERT INTO categories (name) 
+		VALUES (CONCAT('Категория ', i)); 
+	
+		SET i = i + 1;  -- Увеличение переменной категорий на 1 на каждом шаге цикла.
+	END WHILE; 
+	
+	-- Заполнение таблицы товаров данными. 5000 категорий.
+	WHILE j <= 5000 DO 
+		INSERT INTO products (name, price, categoryId) 
+		VALUES (CONCAT('Продукт ', j), RAND() * (10000 - 0.10) + 0.10, FLOOR(RAND() * (101 - 1) + 1)); 
+		-- Цена задается случайным образом десятичными цифрами от 0.10 до 10000;
+		-- Категория товара задается случайным образом целыми цифрами от 0 до 100, 
+		-- так как в таблице категорий всего 100 категорий.
+		
+		SET j = j + 1;  -- Увеличение переменной товаров на 1 на каждом шаге цикла.
+	END WHILE;
+END$$ 
+DELIMITER ;
+
+CALL insertData();  -- Вызов хранимой процедуры.
+
+-- Проверка заполнения таблицы категорий:
+SELECT * FROM categories; 
+
+-- Проверка заполнения таблицы товаров:
+SELECT * FROM products;
